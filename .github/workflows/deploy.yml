@@ -19,6 +19,6 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST }}
           REMOTE_USER: ${{ secrets.USER_NAME }}
           TARGET: /app/
-          SOURCE: /hn-rerank/
+          SOURCE: ./
           ARGS: -av --delete --exclude='.env'
           SCRIPT_AFTER: chmod +x /app/deploy.sh && /app/deploy.sh
