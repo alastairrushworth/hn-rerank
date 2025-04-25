@@ -10,7 +10,6 @@ fi
 source venv/bin/activate
 
 # Install dependencies
-cd repo
 pip install -r requirements.txt
 
 # Restart the service
