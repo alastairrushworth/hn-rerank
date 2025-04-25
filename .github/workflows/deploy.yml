@@ -1,0 +1,24 @@
+name: Push changes to digital ocean droplet
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy_backend:
+    name: Push code to droplet and run script
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+      - name: Deploy to BACKEND_SERVER
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USER_NAME }}
+          TARGET: /app/
+          SOURCE: /hn-rerank/
+          ARGS: -av --delete --exclude='.env'
+          SCRIPT_AFTER: chmod +x /app/deploy.sh && /app/deploy.sh
