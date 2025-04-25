@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HN Reranking API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            margin: 10px 0;
+            padding: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #ff6600;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #results {
+            margin-top: 20px;
+        }
+
+        .story {
+            margin: 10px 0;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Test Hacker News Ranking API</h1>
+    <textarea id="bio-input"
+        placeholder="Enter your bio here...">I am a theoretical biologist, interested in disease ecology</textarea>
+    <button id="submit-btn">Rank Stories</button>
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', async () => {
+            const bio = document.getElementById('bio-input').value;
+            const resultsDiv = document.getElementById('results');
+
+            resultsDiv.innerHTML = 'Loading...';
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/rank', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_bio: bio })
+                });
+
+                const data = await response.json();
+
+                let html = '';
+                data.stories.forEach((story, index) => {
+                    html += `
+                        <div class="story">
+                            <div><strong>${index + 1}. ${story.title}</strong> (${story.similarity.toFixed(3)})</div>
+                            ${story.url ? `<div><a href="${story.url}" target="_blank">${story.url}</a></div>` : ''}
+                            <div>Type: ${story.type}</div>
+                        </div>
+                    `;
+                });
+
+                resultsDiv.innerHTML = html;
+            } catch (error) {
+                resultsDiv.innerHTML = `Error: ${error.message}`;
+            }
+        });
+    </script>
+</body>
+
+</html>
