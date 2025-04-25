@@ -13,4 +13,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Restart the service
-systemctl restart hnrank
+if [ -f /tmp/restart ]; then
+    rm /tmp/restart
+    echo "Restarting the service..."
+    pkill -f "uvicorn app:app"
+fi
+python3 -m uvicorn app:app --host 0.0.0.0 --port 8000
