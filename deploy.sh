@@ -3,6 +3,9 @@ set -e
 
 cd /app
 
+# stop all active python processes
+sudo pkill -f python3
+
 # Activate virtual environment or create if it doesn't exist
 if [ ! -d "venv" ]; then
     python3 -m venv venv
